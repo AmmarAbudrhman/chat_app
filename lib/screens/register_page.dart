@@ -6,15 +6,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
-  static String id = 'login_page';
+class RegisterPage extends StatefulWidget {
+  RegisterPage({super.key});
+  static String id = 'register_page';
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   String? email;
 
   String? password;
@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: const Text(
-                    'Login',
+                    'Register',
                     style: TextStyle(
                       fontSize: 32,
                       color: Colors.white,
@@ -94,13 +94,19 @@ class _LoginPageState extends State<LoginPage> {
                         isLoading = true;
                       });
                       try {
-                        UserCredential user = await loginUser();
+                        UserCredential user = await registerUser();
                       } catch (e) {
                         String errorMessage = 'An error occurred';
                         if (e is FirebaseAuthException) {
                           if (e.code == 'network-request-failed') {
                             errorMessage =
                                 'Network error. Please check your internet connection.';
+                          } else if (e.code == 'email-already-in-use') {
+                            errorMessage = 'This email is already registered.';
+                          } else if (e.code == 'weak-password') {
+                            errorMessage = 'Password is too weak.';
+                          } else if (e.code == 'invalid-email') {
+                            errorMessage = 'Invalid email address.';
                           } else {
                             errorMessage =
                                 e.message ?? 'Authentication failed.';
@@ -146,9 +152,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<UserCredential> loginUser() async {
+  Future<UserCredential> registerUser() async {
     var auth = FirebaseAuth.instance;
-    UserCredential user = await auth.signInWithEmailAndPassword(
+    UserCredential user = await auth.createUserWithEmailAndPassword(
       email: email!,
       password: password!,
     );
