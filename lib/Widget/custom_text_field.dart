@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  CustomTextField({this.hint, this.onChanged});
+  CustomTextField({this.hint, this.onChanged,this.obscureText, super.key,this.icon});
   String? hint;
+  bool? obscureText;
+  Icon? icon;
   Function(String)? onChanged;
 
   @override
@@ -10,6 +12,7 @@ class CustomTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: TextFormField(
+        obscureText: obscureText ?? false,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'value is required';
@@ -23,10 +26,7 @@ class CustomTextField extends StatelessWidget {
           ),
           hintText: hint,
           hintStyle: const TextStyle(color: Colors.white54),
-          prefixIcon: const Icon(
-            Icons.email,
-            color: Colors.white,
-          ),
+          prefixIcon: icon,
         ),
         style: const TextStyle(color: Colors.white),
         keyboardType: TextInputType.emailAddress,

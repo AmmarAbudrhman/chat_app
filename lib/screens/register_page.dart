@@ -62,6 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 CustomTextField(
                   hint: "Email",
+                  icon: Icon(Icons.email,color: Colors.white,),
                   onChanged: (value) {
                     email = value;
                   },
@@ -69,6 +70,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 10),
                 CustomTextField(
                   hint: "Password",
+                  obscureText: true,
+                  icon: Icon(Icons.lock,color: const Color.fromARGB(255, 11, 11, 11),),
                   onChanged: (value) {
                     password = value;
                   },

@@ -64,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 CustomTextField(
                   hint: "Email",
+                  icon: Icon(Icons.email,color: Colors.white,),
                   onChanged: (value) {
                     email = value;
                   },
@@ -71,6 +72,8 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 10),
                 CustomTextField(
                   hint: "Password",
+                  icon: Icon(Icons.lock,color: const Color.fromARGB(255, 11, 11, 11)),
+                  obscureText: true,
                   onChanged: (value) {
                     password = value;
                   },
