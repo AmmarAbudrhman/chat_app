@@ -1,37 +1,65 @@
 import 'package:chat_app/Widget/constant.dart';
+import 'package:chat_app/models/message.dart';
 import 'package:flutter/material.dart';
 
 class ChatBuble extends StatelessWidget {
-  const ChatBuble({super.key});
-
+  const ChatBuble({super.key, required this.message});
+  final Message message;
   @override
   Widget build(BuildContext context) {
     return Align(
+      alignment: Alignment.centerRight,
       child: Container(
-
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(left: 16,top: 32,bottom: 32,right: 32),
-        margin: const EdgeInsets.all(16),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.7,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(32),
-            topRight: Radius.circular(32),
-            bottomRight: Radius.circular(32),
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+            bottomLeft: Radius.circular(16),
+            bottomRight: Radius.circular(4),
           ),
-          border: Border.all(color: Colors.white, width: 2),
-      
           color: kPrimaryColor,
         ),
         child: Text(
-          'i am a new user',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          message.message,
+          style: TextStyle(fontSize: 16, color: Colors.white),
         ),
       ),
     );
-  
+  }
+}
+
+class ChatBubleForFriend extends StatelessWidget {
+  const ChatBubleForFriend({super.key, required this.message});
+  final Message message;
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.7,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+            bottomLeft: Radius.circular(4),
+            bottomRight: Radius.circular(16),
+          ),
+          color: Color(0xFFE8E8E8),
+        ),
+        child: Text(
+          message.message,
+          style: TextStyle(fontSize: 16, color: Colors.black87),
+        ),
+      ),
+    );
   }
 }
