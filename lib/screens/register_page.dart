@@ -2,6 +2,7 @@ import 'package:chat_app/Widget/constant.dart';
 import 'package:chat_app/Widget/custom_button.dart';
 import 'package:chat_app/Widget/custom_text_field.dart';
 import 'package:chat_app/helper/show_snack_bar.dart';
+import 'package:chat_app/screens/chat_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -35,7 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Image.asset('assets/images/scholar.png'),
+                Image.asset(kLogo),
                 Transform.translate(
                   offset: const Offset(0, -120),
                   child: const Text(
@@ -45,7 +46,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       fontSize: 32,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Pacifico',
                     ),
                   ),
                 ),
@@ -89,12 +89,20 @@ class _RegisterPageState extends State<RegisterPage> {
                       }
                       return;
                     }
-                    if (formkey.currentState!.validate()) {
+                    if (
+                      formkey.currentState!.validate()) {
                       setState(() {
                         isLoading = true;
                       });
                       try {
                         UserCredential user = await registerUser();
+                        if (context.mounted) {
+                          Navigator.pushNamed(
+                            context,
+                            ChatPage.id,
+                            arguments: email,
+                          );
+                        }
                       } catch (e) {
                         String errorMessage = 'An error occurred';
                         if (e is FirebaseAuthException) {
@@ -107,6 +115,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             errorMessage = 'Password is too weak.';
                           } else if (e.code == 'invalid-email') {
                             errorMessage = 'Invalid email address.';
+                          } else if (e.code == 'invalid-credential') {
+                            errorMessage = 'Invalid email or password.';
                           } else {
                             errorMessage =
                                 e.message ?? 'Authentication failed.';
@@ -115,12 +125,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         if (context.mounted) {
                           showSnackBar(context, errorMessage);
                         }
+                      } finally {
+                        if (mounted) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
                       }
                     }
-                    setState(() {
-                      isLoading = false;
-                      Navigator.pop(context);
-                    });
                   },
                 ),
                 Row(

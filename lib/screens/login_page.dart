@@ -2,6 +2,8 @@ import 'package:chat_app/Widget/constant.dart';
 import 'package:chat_app/Widget/custom_button.dart';
 import 'package:chat_app/Widget/custom_text_field.dart';
 import 'package:chat_app/helper/show_snack_bar.dart';
+import 'package:chat_app/screens/chat_page.dart';
+import 'package:chat_app/screens/register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -35,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Image.asset('assets/images/scholar.png'),
+                Image.asset(kLogo),
                 Transform.translate(
                   offset: const Offset(0, -120),
                   child: const Text(
@@ -75,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 15),
                 CustomButton(
-                  text: 'Register',
+                  text: 'Login',
                   onPressed: () async {
                     if (email == null ||
                         email!.isEmpty ||
@@ -95,12 +97,28 @@ class _LoginPageState extends State<LoginPage> {
                       });
                       try {
                         UserCredential user = await loginUser();
+                        if (context.mounted) {
+                          Navigator.pushNamed(
+                            context,
+                            ChatPage.id,
+                            arguments: email,
+                          );
+                        }
                       } catch (e) {
                         String errorMessage = 'An error occurred';
                         if (e is FirebaseAuthException) {
                           if (e.code == 'network-request-failed') {
                             errorMessage =
                                 'Network error. Please check your internet connection.';
+                          } else if (e.code == 'user-not-found') {
+                            errorMessage = 'No user found for that email.';
+                          } else if (e.code == 'wrong-password') {
+                            errorMessage =
+                                'Wrong password provided for that user.';
+                          } else if (e.code == 'invalid-email') {
+                            errorMessage = 'Invalid email address.';
+                          } else if (e.code == 'invalid-credential') {
+                            errorMessage = 'Invalid email or password.';
                           } else {
                             errorMessage =
                                 e.message ?? 'Authentication failed.';
@@ -109,29 +127,31 @@ class _LoginPageState extends State<LoginPage> {
                         if (context.mounted) {
                           showSnackBar(context, errorMessage);
                         }
+                      } finally {
+                        if (mounted) {
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
                       }
                     }
-                    setState(() {
-                      isLoading = false;
-                      Navigator.pop(context);
-                    });
                   },
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Already have an account?",
+                      "Don't have an account?",
                       style: TextStyle(color: Colors.white),
                     ),
                     TextButton(
                       onPressed: () {},
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.pushNamed(context, RegisterPage.id);
                         },
                         child: const Text(
-                          'Login',
+                          'Register',
                           style: TextStyle(color: Color(0xffC7EDE6)),
                         ),
                       ),

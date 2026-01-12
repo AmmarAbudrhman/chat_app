@@ -1,3 +1,4 @@
+import 'package:chat_app/screens/chat_page.dart';
 import 'package:chat_app/screens/login_page.dart';
 import 'package:chat_app/screens/register_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,12 +17,13 @@ class SchoolChat extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        'login_page': (context) => LoginPage('login'),
-        'register_page': (context) => RegisterPage(),
+        LoginPage.id: (context) => LoginPage(),
+        RegisterPage.id: (context) => RegisterPage(),
+        ChatPage.id: (context) => ChatPage(),
       },
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: 'login_page',
+      initialRoute: LoginPage.id,
     );
   }
 }
